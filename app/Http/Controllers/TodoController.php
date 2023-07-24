@@ -33,6 +33,7 @@ class TodoController extends Controller
 
     public function storeTaskData(Request $request)
     {
+        dd($request);
         $task_title = $request->task_title;
 
         $taskData = new Todo;

@@ -187,11 +187,12 @@ body {font-family: Arial, Helvetica, sans-serif;}
 			if(task_title)
 			{
 				// let url = 'https://jsonplaceholder.typicode.com/todos/1';
-				var formData = new FormData();
-    			formData.append("_token", _token);
+				var formData = [];
+    			// formData.push({'_token':_token}, {'task_title':task_title});
+
     			// formData.append("task_title", task_title);
-				console.log("formData", formData);
-				return;
+				// console.log("formData", formData);
+				// return;
 				fetch('/storeTaskData', {
 					method: 'POST', 
 					headers: {
