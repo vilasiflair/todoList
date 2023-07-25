@@ -304,7 +304,6 @@ body {font-family: Arial, Helvetica, sans-serif;}
 
 		document.getElementById("delete_task").addEventListener("click", function(e) {
 			e.preventDefault();
-			
 		});
 		/*const table = document.querySelector("table");
 			const tbodies = table.tBodies;
