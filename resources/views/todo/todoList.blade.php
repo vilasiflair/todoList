@@ -89,6 +89,7 @@
 
 	<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 	<script type="text/javascript">
+		var status_data2 = [];
 		window.onload = function(e){ 
 			let url = '/getTaskData';
 			// let url = 'https://jsonplaceholder.typicode.com/todos/1';
@@ -215,22 +216,40 @@
 		}
 
 		document.getElementById("delete_task").addEventListener("click", function(){
-				console.log("status_data", status_data1);
-				// status_data1.forEach(function(b){
-					// console.log("b:::", b);
+			let status_data2 = document.getElementsByClassName("status_data");
+			console.log("status_data", status_data2[0]);
+			console.log("status_data", status_data2[2]);
+			// return;
+			for (let j = 0; j < status_data2.length; j++) 
+			{
+				if(status_data2[j].value == 1)
+				{
+					varGetRow = this.parent("tr");
+					console.log("varGetRow", varGetRow);
+				}
 
-				// });
-				// status_data1[i].addEventListener("mousehover", function(b){
-				// 	if(b.target.value == 1)
-				// 	{
-				// 		console.log("forDeleteCheckbox");
-				// 	}
-				// 	else
-				// 	{
-				// 		console.log("notDeleted");
-				// 	}
-				// });
-			});
+				/*addEventListener("change", function(a) {
+				if (a.target.value == 0) {
+					a.target.value = 1;
+				} else {
+					a.target.value = 0
+				}*/	
+			}
+			// status_data1.forEach(function(b){
+				// console.log("b:::", b);
+
+			// });
+			// status_data1[i].addEventListener("mousehover", function(b){
+			// 	if(b.target.value == 1)
+			// 	{
+			// 		console.log("forDeleteCheckbox");
+			// 	}
+			// 	else
+			// 	{
+			// 		console.log("notDeleted");
+			// 	}
+			// });
+		});
 	</script>
 </body>
 </html>
