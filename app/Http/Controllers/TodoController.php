@@ -27,13 +27,13 @@ class TodoController extends Controller
 
     public function getTaskData(Request $request)
     {
+        // dd($request);
         $taskData = Todo::get();
         return $taskData;
     }
 
     public function storeTaskData(Request $request)
     {
-        dd($request);
         $task_title = $request->task_title;
 
         $taskData = new Todo;
@@ -47,8 +47,7 @@ class TodoController extends Controller
     {
         $task_id = $request->task_id;
         $task_status = $request->task_status;
-        // dd($request);
-
+        
         Todo::where('id', $task_id)->update(['status' => $task_status]);
         $taskData = Todo::get();
         return $taskData;
