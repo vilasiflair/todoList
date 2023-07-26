@@ -27,6 +27,7 @@ class TodoController extends Controller
 
     public function getTaskData(Request $request)
     {
+        // dd($request);
         $taskData = Todo::get();
         return $taskData;
     }
@@ -46,8 +47,7 @@ class TodoController extends Controller
     {
         $task_id = $request->task_id;
         $task_status = $request->task_status;
-        // dd($request);
-
+        
         Todo::where('id', $task_id)->update(['status' => $task_status]);
         $taskData = Todo::get();
         return $taskData;
