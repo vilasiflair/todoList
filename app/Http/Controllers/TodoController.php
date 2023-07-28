@@ -53,6 +53,24 @@ class TodoController extends Controller
         return $taskData;
     }
 
+    public function deleteCompletedTasks(Request $request)
+    {
+        $task_id = $request->task_id;
+        
+        Todo::where('id', $task_id)->delete();
+        $taskData = Todo::get();
+        return $taskData;
+    }
+
+    public function getFilteredTaskData(Request $request)
+    {
+        $task_id_Arr = explode(',', $request->task_id);
+        // $task_id = $request->task_id;
+        $taskData = Todo::whereIn('id', $task_id_Arr)->get();
+        // dd($taskData);
+        return $taskData;
+    }
+
     /**
      * Store a newly created resource in storage.
      */

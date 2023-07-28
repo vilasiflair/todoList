@@ -97,17 +97,14 @@
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<a href="{{URL::to('/')}}/Task.csv" target="_blank">
-						<button class="btn"><i class="fa fa-download"></i> Download File</button>
-					</a>
 					<div class="mb-3">
 						<label for="importCSVFile" class="form-label">CSV File</label>
-						<input class="form-control" type="file" id="importCSVFile" accept=".csv">
+						<input class="form-control" type="file" id="importCSVFile">
 					</div>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					<button type="button" id="store_import_task" class="btn btn-primary">Save changes</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
 				</div>
 			</div>
 		</div>
@@ -129,7 +126,7 @@
 					let task_id = data.id;
 					let status = data.status;
 					let task_title = data.task_title;
-					let created_at = new Date(data.created_at).toDateString();
+					let created_at = data.created_at;
 					
 					appendTask.innerHTML += '<tr id="'+task_id+'"><td><input data-task_id = "'+task_id+'" type="checkbox" class="status_data" name="status" value="'+status+'" ' + (status == 1 ? 'checked' : '') + '></td><td><span class="task_title_data">'+task_title+'</span></td><td>'+created_at+'</td></tr>';
 				});
@@ -267,19 +264,126 @@
 			}
 			console.log("completed::", task_data);
 		}
-		
-		document.getElementById("store_import_task").addEventListener("click", function(){
-			var importCSVFile = document.getElementById("importCSVFile").value;
-			if(importCSVFile)
-			{
 
-			}
-			else
+		/* document.getElementsByClassName("taskFiltering").addEventListener("click", function(e){
+			console.log("taskFiltering::", e);
+		}); */
+		/* document.getElementById("taskFiltering").addEventListener("click", function(e){
+			var filterBtnIdAttr = e.target.getAttribute("id");
+			var filterData = document.getElementsByClassName("status_data");
+			var completed_task_ids = [], remaining_task_ids = [], all_task_ids = [];
+			for (let j = 0; j < filterData.length; j++) 
 			{
-				alert("Add CSV file");
+				var all_task_id = filterData[j].parentNode.parentNode.getAttribute("id");
+				if(filterData[j].value == 1)
+				{
+					var completed_task_id = filterData[j].parentNode.parentNode.getAttribute("id");
+				}
+				else if(filterData[j].value == 0)
+				{
+					var remaining_task_id = filterData[j].parentNode.parentNode.getAttribute("id");
+				}
+				completed_task_ids.push(completed_task_id); 
+				remaining_task_ids.push(remaining_task_id); 
+				all_task_ids.push(all_task_id); 
 			}
+			
+			if(filterBtnIdAttr == "show_all_task")
+			{
+				getFilteredData(all_task_ids);
+			}
+
+			if(filterBtnIdAttr == "show_completed_task")
+			{
+				getFilteredData(completed_task_ids);
+			}
+
+			if(filterBtnIdAttr == "show_remaining_task")
+			{
+				getFilteredData(remaining_task_ids);	
+			}
+			
+			/* let filterData = document.getElementsByClassName("status_data");
+			var task_ids = [];
+			for (let j = 0; j < filterData.length; j++) 
+			{
+				if(filterData[j].value == 1)
+				{
+					var task_id = filterData[j].parentNode.parentNode.getAttribute("id");
+				}
+				else if(filterData[j].value == 0)
+				{
+					var task_id = filterData[j].parentNode.parentNode.getAttribute("id");
+				}
+				else
+				{
+					var task_id = filterData[j].parentNode.parentNode.getAttribute("id");
+				}
+				task_ids.push(task_id); 
+			}
+			
+			console.log("task_id::", task_ids);
+			return;
+				const formData = new FormData();
+				formData.append('_token', '{{ csrf_token() }}');
+				formData.append('task_id', task_id);
+
+				let url = '/getFilteredTaskData';
+				fetch(url, {
+					method: 'POST', 
+					body: formData
+				})
+				.then(Result => Result.json())
+				.then(dataResult => {
+					let appendTask = document.getElementById("task_data_row");
+					appendTask.innerHTML = "";
+					dataResult.forEach(function(data){
+						let task_id = data.id;
+						let status = data.status;
+						let task_title = data.task_title;
+						let created_at = data.created_at;
+						
+						appendTask.innerHTML += '<tr id="'+task_id+'"><td><input type="checkbox" class="status_data" name="status" value="'+status+'" ' + (status == 1 ? 'checked' : '') + '></td><td><span class="task_title_data">'+task_title+'</span></td><td>'+created_at+'</td></tr>';
+					});
+					setTimeout( function() {
+						attachChangeEventToCheckboxes();
+					}, 1000); 
+				})
+				.catch(errorMsg => { console.log(errorMsg); }); 
+			
 		});
-		
+
+
+		function getFilteredData(task_ids)
+		{
+			const formData = new FormData();
+			formData.append('_token', '{{ csrf_token() }}');
+			formData.append('task_id', task_ids);
+
+			let url = '/getFilteredTaskData';
+			fetch(url, {
+				method: 'POST', 
+				body: formData
+			})
+			.then(Result => Result.json())
+			.then(dataResult => {
+				console.log("dataResult:", dataResult);
+				let appendTask = document.getElementById("task_data_row");
+				appendTask.innerHTML = "";
+				dataResult.forEach(function(data){
+					let task_id = data.id;
+					let status = data.status;
+					let task_title = data.task_title;
+					let created_at = data.created_at;
+					
+					appendTask.innerHTML += '<tr id="'+task_id+'"><td><input type="checkbox" class="status_data" name="status" value="'+status+'" ' + (status == 1 ? 'checked' : '') + '></td><td><span class="task_title_data">'+task_title+'</span></td><td>'+created_at+'</td></tr>';
+				});
+				setTimeout( function() {
+					attachChangeEventToCheckboxes();
+				}, 1000); 
+			})
+			.catch(errorMsg => { console.log(errorMsg); }); 
+		} */
 	</script>
 </body>
 </html>

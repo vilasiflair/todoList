@@ -25,6 +25,8 @@ Route::resource('todo', TodoController::class);
 Route::get('getTaskData', [TodoController::class, 'getTaskData'])->name('getTaskData'); 
 Route::post('storeTaskData', [TodoController::class, 'storeTaskData'])->name('storeTaskData'); 
 Route::post('updateTaskData', [TodoController::class, 'updateTaskData'])->name('updateTaskData'); 
+Route::post('deleteCompletedTasks', [TodoController::class, 'deleteCompletedTasks'])->name('deleteCompletedTasks'); 
+Route::post('getFilteredTaskData', [TodoController::class, 'getFilteredTaskData'])->name('getFilteredTaskData'); 
 
 
 
