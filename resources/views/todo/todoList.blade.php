@@ -92,23 +92,26 @@
 	<div class="modal fade" id="import_task" tabindex="-1" aria-labelledby="import_taskLabel" aria-hidden="true">
 		<div class="modal-dialog">
 			<div class="modal-content">
-				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="import_taskLabel">Import Tasks</h1>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<a href="{{URL::to('/')}}/Task.csv" target="_blank">
-						<button class="btn"><i class="fa fa-download"></i> Download File</button>
-					</a>
-					<div class="mb-3">
-						<label for="importCSVFile" class="form-label">CSV File</label>
-						<input class="form-control" type="file" id="importCSVFile" accept=".csv">
+				<form id="importFile" enctype="multipart/form-data">
+					@csrf
+					<div class="modal-header">
+						<h1 class="modal-title fs-5" id="import_taskLabel">Import Tasks</h1>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					<button type="button" id="store_import_task" class="btn btn-primary">Save changes</button>
-				</div>
+					<div class="modal-body">
+						<a href="{{URL::to('/')}}/Task.csv" target="_blank">
+							<button type="button" class="btn"><i class="fa fa-download"></i>Download Example</button>
+						</a>
+						<div class="mb-3">
+							<label for="importCSVFile" class="form-label">CSV File</label>
+							<input class="form-control" name="importCSVFile" type="file" id="importCSVFile" accept=".csv" required>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="import_modal_close" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						<button type="button" id="store_import_task" class="btn btn-primary">Save changes</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -268,11 +271,88 @@
 			console.log("completed::", task_data);
 		}
 		
-		document.getElementById("store_import_task").addEventListener("click", function(){
-			var importCSVFile = document.getElementById("importCSVFile").value;
+		/* document.getElementById("store_import_task").addEventListener("click", function(){
+			// var importCSVFile = document.getElementById("importCSVFile").value;
+			var importCSVFile = document.getElementById("importCSVFile").files[0].name; 
+			console.log("csvFile::", importCSVFile);
 			if(importCSVFile)
 			{
+				let url = '/importTaskData';
+				const formData = new FormData();
+				formData.append('_token', '{{ csrf_token() }}');
+				formData.append('importCSVFile', importCSVFile);
+				
+				fetch(url, {
+					method: 'POST', 
+					body: formData
+				})
+				.then(Result => Result.json())
+				.then(dataResult => {
+					/* document.getElementById("task_title").value = "";
+					var task_id = dataResult.id;
+					var task_title = dataResult.task_title;
+					var status = dataResult.status;
+					var created_at = dataResult.created_at;
+					var appendTask = document.getElementById("task_data_row");
 
+					appendTask.innerHTML += '<tr id="'+task_id+'"><td><input data-task_id = "'+task_id+'" type="checkbox" class="status_data" name="status" value="'+status+'" ' + (status == 1 ? 'checked' : '') + '></td><td><span class="task_title_data">'+task_title+'</span></td><td>'+created_at+'</td></tr>';
+
+					attachChangeEventToCheckboxes(); 
+				})
+				.catch(errorMsg => { console.log(errorMsg); });
+			}
+			else
+			{
+				alert("Add CSV file");
+			}
+		}); */
+
+		document.getElementById("store_import_task").addEventListener("click", function(e){
+			// var importCSVFile = document.getElementById("importCSVFile").value;
+			// var importCSVFile = document.getElementById("importCSVFile").files[0].name; 
+			// e.preventDefault();
+			// var importCSVFile = new FormData();
+			// var importCSVFile = new FormData(document.getElementById("importFile").files);
+			var importCSVFileCheck = document.getElementById('importCSVFile').value;
+			console.log("importCSVFileCheck", importCSVFileCheck);
+			var importCSVFile = new FormData(document.getElementById("importFile"));
+			// console.log("csvFile::", importCSVFile);
+			if(importCSVFile && importCSVFileCheck != '')
+			{
+				let url = '/importTaskData';
+				/* const formData = new FormData();
+				formData.append('_token', '{{ csrf_token() }}');
+				formData.append('importCSVFile', importCSVFile); */
+				
+				fetch(url, {
+					method: 'POST', 
+					body: importCSVFile
+				})
+				
+				.then(Result => Result.json())
+				.then(dataResult => {
+					/* console.log("dataResult", dataResult);
+					return; */
+					if (dataResult.success) {
+						document.getElementById("importCSVFile").value = "";
+						var task_id = dataResult.id;
+						var task_title = dataResult.task_title;
+						var status = dataResult.status;
+						var created_at = dataResult.created_at;
+						var appendTask = document.getElementById("task_data_row");
+
+						appendTask.innerHTML += '<tr id="'+task_id+'"><td><input data-task_id = "'+task_id+'" type="checkbox" class="status_data" name="status" value="'+status+'" ' + (status == 1 ? 'checked' : '') + '></td><td><span class="task_title_data">'+task_title+'</span></td><td>'+created_at+'</td></tr>';
+						let import_modal_close = document.getElementById('import_modal_close');
+						import_modal_close.click();
+						attachChangeEventToCheckboxes();
+					}
+					else
+					{
+						alert(dataResult.message);
+						return;
+					}
+				})
+				.catch(errorMsg => { console.log(errorMsg); });
 			}
 			else
 			{

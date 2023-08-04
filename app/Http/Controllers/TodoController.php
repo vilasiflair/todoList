@@ -71,6 +71,52 @@ class TodoController extends Controller
         return $taskData;
     }
 
+    /* private function isCsvStructureValid($csvData, $tableColumns)
+    {
+        $csvColumns = array_map('strtolower', $csvData[0]); // Assuming the first row of CSV contains column headers
+
+        // Compare the two arrays
+        return count(array_diff($tableColumns, $csvColumns)) === 0;
+    } */
+
+    public function importTaskData(Request $request)
+    {
+        // Get the column names of the table
+        
+        // $tableColumns = Schema::getColumnListing((new Todo)->getTable());
+        // dd($tableColumns);
+        if($request->hasFile('importCSVFile'))
+        {
+            /* $file = $request->file('importCSVFile');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            // Process the CSV data and store it in the database
+            $csvData = array_map('str_getcsv', file(storage_path('app/csv/' . $fileName)));
+    
+            // Check if CSV columns match with table columns
+            if (!$this->isCsvStructureValid($csvData, $tableColumns)) {
+                return response()->json(['success' => false, 'message' => 'CSV columns do not match table columns']);
+            } */
+        
+            $file = $request->file('importCSVFile');
+            $fileName = time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('csv', $fileName);
+            
+            $csvData = array_map('str_getcsv', file(storage_path('app/csv/' . $fileName)));
+            
+            foreach ($csvData as $row) {
+                Todo::create([
+                    'task_title' => $row[0],
+                    'task_status' => 0,
+                ]);
+            }
+
+            return response()->json(['success' => true, 'message' => 'CSV data stored successfully']);
+        }
+        return response()->json(['success' => false, 'message' => 'File upload failed']);
+    }
+
+    
+
     /**
      * Store a newly created resource in storage.
      */
