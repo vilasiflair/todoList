@@ -38,7 +38,8 @@
 							<a href="javascript:void(0)" class="btn btn-success import_task" data-bs-toggle="modal" data-bs-target="#import_task">Import Task</a>
 						</div>
 						<div class="col-md-2">
-							<button  id="export_task" class="btn btn-success export_task">Export Task</button>
+							<!-- <span data-href="/export-csv" id="export" class="btn btn-success btn-sm" onclick ="exportTasks (event.target);">Export</span> -->
+							<button type="button" data-href="/export_task" id="export_task" class="btn btn-success export_task" onclick="exportTasks(event)">Export Task</button>
 						</div>
 					</div>
 				</div>
@@ -359,6 +360,11 @@
 				alert("Add CSV file");
 			}
 		});
+
+		function exportTasks(event) {
+			let _url = event.target.getAttribute('data-href');
+			window.location.href = _url;
+		}
 		
 	</script>
 </body>

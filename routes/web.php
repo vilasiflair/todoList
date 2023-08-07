@@ -28,6 +28,7 @@ Route::post('updateTaskData', [TodoController::class, 'updateTaskData'])->name('
 Route::post('deleteCompletedTasks', [TodoController::class, 'deleteCompletedTasks'])->name('deleteCompletedTasks'); 
 Route::post('getFilteredTaskData', [TodoController::class, 'getFilteredTaskData'])->name('getFilteredTaskData'); 
 Route::post('importTaskData', [TodoController::class, 'importTaskData'])->name('importTaskData'); 
+Route::get('export_task', [TodoController::class, 'export_task'])->name('export_task'); 
 
 
 

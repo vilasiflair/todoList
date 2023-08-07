@@ -71,50 +71,83 @@ class TodoController extends Controller
         return $taskData;
     }
 
-    /* private function isCsvStructureValid($csvData, $tableColumns)
+    public function isCsvStructureValid($csvData, $tableColumns)
     {
+        dd($csvData);
         $csvColumns = array_map('strtolower', $csvData[0]); // Assuming the first row of CSV contains column headers
 
         // Compare the two arrays
         return count(array_diff($tableColumns, $csvColumns)) === 0;
-    } */
+    }
 
     public function importTaskData(Request $request)
     {
         // Get the column names of the table
         
-        // $tableColumns = Schema::getColumnListing((new Todo)->getTable());
-        // dd($tableColumns);
         if($request->hasFile('importCSVFile'))
         {
-            /* $file = $request->file('importCSVFile');
+            // dd("test", $request->hasFile('importCSVFile'));
+            $tableColumns = Schema::getColumnListing((new Todo)->getTable());
+        
+            $file = $request->file('importCSVFile');
             $fileName = time() . '.' . $file->getClientOriginalExtension();
             // Process the CSV data and store it in the database
             $csvData = array_map('str_getcsv', file(storage_path('app/csv/' . $fileName)));
-    
             // Check if CSV columns match with table columns
             if (!$this->isCsvStructureValid($csvData, $tableColumns)) {
                 return response()->json(['success' => false, 'message' => 'CSV columns do not match table columns']);
-            } */
+            }
+            dd("test");
         
             $file = $request->file('importCSVFile');
             $fileName = time() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('csv', $fileName);
             
             $csvData = array_map('str_getcsv', file(storage_path('app/csv/' . $fileName)));
-            
+            dd($csvData);
             foreach ($csvData as $row) {
                 Todo::create([
                     'task_title' => $row[0],
                     'task_status' => 0,
                 ]);
             }
+            // dd()
 
             return response()->json(['success' => true, 'message' => 'CSV data stored successfully']);
         }
         return response()->json(['success' => false, 'message' => 'File upload failed']);
     }
 
+
+    public function export_task(Request $request)
+    {
+        $fileName = 'tasks.csv';
+        $tasks = Todo::all();
+        $headers = array(
+            "Content-type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$fileName",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        );
+        $columns = array('Task Name', 'Status', 'Created Date');
+
+        $callback = function() use($tasks, $columns) {
+            $file = fopen('php://output', 'w');
+            fputcsv($file, $columns);
+
+            foreach ($tasks as $task) {
+                $row['Task Name']  = $task->task_title;
+                $row['Status']    = $task->status;
+                $row['Created Date']  = $task->created_at;
+
+                fputcsv($file, array($row['Task Name'], $row['Status'], $row['Created Date']));
+            }
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
+    }
     
 
     /**
