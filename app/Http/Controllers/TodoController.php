@@ -87,7 +87,7 @@ class TodoController extends Controller
         if($request->hasFile('importCSVFile'))
         {
             // dd("test", $request->hasFile('importCSVFile'));
-            $tableColumns = Schema::getColumnListing((new Todo)->getTable());
+            /* $tableColumns = Schema::getColumnListing((new Todo)->getTable());
         
             $file = $request->file('importCSVFile');
             $fileName = time() . '.' . $file->getClientOriginalExtension();
@@ -96,24 +96,24 @@ class TodoController extends Controller
             // Check if CSV columns match with table columns
             if (!$this->isCsvStructureValid($csvData, $tableColumns)) {
                 return response()->json(['success' => false, 'message' => 'CSV columns do not match table columns']);
-            }
-            dd("test");
+            } */
+            // dd("test");
         
             $file = $request->file('importCSVFile');
             $fileName = time() . '.' . $file->getClientOriginalExtension();
             $file->storeAs('csv', $fileName);
             
             $csvData = array_map('str_getcsv', file(storage_path('app/csv/' . $fileName)));
-            dd($csvData);
+            // dd($csvData);
             foreach ($csvData as $row) {
                 Todo::create([
                     'task_title' => $row[0],
                     'task_status' => 0,
                 ]);
             }
-            // dd()
-
-            return response()->json(['success' => true, 'message' => 'CSV data stored successfully']);
+            $taskData = Todo::get();
+            // dd($taskData);
+            return response()->json(['success' => true, 'message' => 'CSV data stored successfully', 'taskData' => $taskData ]);
         }
         return response()->json(['success' => false, 'message' => 'File upload failed']);
     }

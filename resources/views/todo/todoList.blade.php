@@ -315,7 +315,6 @@
 			// var importCSVFile = new FormData();
 			// var importCSVFile = new FormData(document.getElementById("importFile").files);
 			var importCSVFileCheck = document.getElementById('importCSVFile').value;
-			console.log("importCSVFileCheck", importCSVFileCheck);
 			var importCSVFile = new FormData(document.getElementById("importFile"));
 			// console.log("csvFile::", importCSVFile);
 			if(importCSVFile && importCSVFileCheck != '')
@@ -342,7 +341,17 @@
 						var created_at = dataResult.created_at;
 						var appendTask = document.getElementById("task_data_row");
 
-						appendTask.innerHTML += '<tr id="'+task_id+'"><td><input data-task_id = "'+task_id+'" type="checkbox" class="status_data" name="status" value="'+status+'" ' + (status == 1 ? 'checked' : '') + '></td><td><span class="task_title_data">'+task_title+'</span></td><td>'+created_at+'</td></tr>';
+						appendTask.innerHTML = "";
+						dataResult.taskData.forEach(function(data){
+							let task_id = data.id;
+							let status = data.status;
+							let task_title = data.task_title;
+							let created_at = new Date(data.created_at).toDateString();
+							
+							appendTask.innerHTML += '<tr id="'+task_id+'"><td><input data-task_id = "'+task_id+'" type="checkbox" class="status_data" name="status" value="'+status+'" ' + (status == 1 ? 'checked' : '') + '></td><td><span class="task_title_data">'+task_title+'</span></td><td>'+created_at+'</td></tr>';
+						});
+
+						/* appendTask.innerHTML += '<tr id="'+task_id+'"><td><input data-task_id = "'+task_id+'" type="checkbox" class="status_data" name="status" value="'+status+'" ' + (status == 1 ? 'checked' : '') + '></td><td><span class="task_title_data">'+task_title+'</span></td><td>'+created_at+'</td></tr>'; */
 						let import_modal_close = document.getElementById('import_modal_close');
 						import_modal_close.click();
 						attachChangeEventToCheckboxes();
