@@ -120,6 +120,7 @@
 	<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 	<script type="text/javascript">
 		var task_data = document.getElementsByClassName("status_data");
+		var task_list_data = document.getElementById("task_data_row");
 		var status_data = [];
 		
 		// window.onload = 
@@ -225,7 +226,7 @@
 							var task_id = value.id;
 							var status = value.status;
 							var task_title = value.task_title;
-							var created_at = new Date(value.created_at).toDateString();
+							var created_at = value.created_at;
 							
 							appendTask.innerHTML += '<tr id="'+task_id+'"><td><input data-task_id = "'+task_id +'" data-created_at = "'+created_at+'" type="checkbox" class="status_data" name="status" value="'+status+'" ' + (status == 1 ? 'checked' : '') + '></td><td><span class="task_title_data">'+task_title+'</span></td><td>'+created_at+'</td></tr>';
 						});
@@ -262,7 +263,7 @@
 							var task_id = value.id;
 							var status = value.status;
 							var task_title = value.task_title;
-							var created_at = new Date(value.created_at).toDateString();
+							var created_at = value.created_at;
 							
 							appendTask.innerHTML += '<tr id="'+task_id+'"><td><input data-task_id = "'+task_id+'" data-created_at = "'+created_at+'" type="checkbox" class="status_data" name="status" value="'+status+'" ' + (status == 1 ? 'checked' : '') + '></td><td><span class="task_title_data">'+task_title+'</span></td><td>'+created_at+'</td></tr>';
 						});
@@ -301,8 +302,8 @@
 						let task_id = element.getAttribute('data-task_id');
 						let task_title = element.getAttribute('data-name');
 						let status = element.value;
-						let created_at = new Date(element.getAttribute('data-created_at')).toDateString();
-				
+						let created_at = element.getAttribute('data-created_at');
+						
 						appendTask.innerHTML += '<tr id="'+task_id+'"><td><input data-task_id = "'+task_id+'" type="checkbox" class="status_data" name="status" value="'+status+'" ' + (status == 1 ? 'checked' : '') + '></td><td><span class="task_title_data">'+task_title+'</span></td><td>'+created_at+'</td></tr>';
 					});
 					/* completedTasks.forEach(element => {
@@ -326,7 +327,7 @@
 						let task_id = element.getAttribute('data-task_id');
 						let task_title = element.getAttribute('data-name');
 						let status = element.value;
-						let created_at = new Date(element.getAttribute('data-created_at')).toDateString();
+						let created_at = element.getAttribute('data-created_at');
 						
 						appendTask.innerHTML += '<tr id="'+task_id+'"><td><input data-task_id = "'+task_id+'" type="checkbox" class="status_data" name="status" value="'+status+'" ' + (status == 1 ? 'checked' : '') + '></td><td><span class="task_title_data">'+task_title+'</span></td><td>'+created_at+'</td></tr>';
 					});
@@ -340,7 +341,7 @@
 						let task_id = element.getAttribute('data-task_id');
 						let task_title = element.getAttribute('data-name');
 						let status = element.value;
-						let created_at = new Date(element.getAttribute('data-created_at')).toDateString();
+						let created_at = element.getAttribute('data-created_at');
 						
 						appendTask.innerHTML += '<tr id="'+task_id+'"><td><input data-task_id = "'+task_id+'" type="checkbox" class="status_data" name="status" value="'+status+'" ' + (status == 1 ? 'checked' : '') + '></td><td><span class="task_title_data">'+task_title+'</span></td><td>'+created_at+'</td></tr>';
 					});
@@ -414,7 +415,7 @@
 						var task_id = dataResult.id;
 						var task_title = dataResult.task_title;
 						var status = dataResult.status;
-						let created_at = new Date(dataResult.created_at).toDateString();
+						var created_at = dataResult.created_at;
 						var appendTask = document.getElementById("task_data_row");
 
 						appendTask.innerHTML = "";

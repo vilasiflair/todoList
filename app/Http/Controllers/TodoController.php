@@ -40,6 +40,7 @@ class TodoController extends Controller
         $taskData->task_title = $task_title;
         $taskData->status = 0;
         $taskData->save();
+        $taskData = Todo::get();
         return $taskData;
     }
 
